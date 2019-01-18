@@ -1,4 +1,4 @@
-## Bert模型tensorflow源码解析（详解transformer encoder数据运算）
+## Bert模型tensorflow源码解析（详解Transformer Encoder数据运算）
 
 关于Bert模型的基本内容这里就不讲述了，可参考其它文章，这里有一个收集了很多讲解bert文章的网址：
 
