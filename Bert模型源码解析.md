@@ -93,7 +93,7 @@ $$
 
 ### transformer_model
 
-下面我对transformer_model这个函数进行解析，该函数是将transformer encoding所有的组件结合在一起。 很多时候，结合图形理解是非常有帮助的。下面我们先看一下下面这个图吧（我们把这个图的结构叫做transformer block吧）：
+下面我对transformer_model这个函数进行解析，该函数是将Transformer Encoded所有的组件结合在一起。 很多时候，结合图形理解是非常有帮助的。下面我们先看一下下面这个图吧（我们把这个图的结构叫做transformer block吧）：
 
 ![](C:\Users\zwj\Desktop\Bert文章书写\image\20181201154808777.png)
 
@@ -125,8 +125,22 @@ return的时候通过reshape_from_matrix函数把block的输出变成维度和in
 
 
 
-### 后续
+### Bert_model
 
-**到此为止，bert模型部分的整个代码已经梳理清楚了，得到的这个张量又怎么进行Bert最后的输出从而训练得到词的表征，过几天见分解。**
+为了方便训练，模型的整个过程都封装在Bert_model类中，通过该类的实例可以访问模型中的结果。详细的过程见代码。上述几个函数梳理之后便没什么复杂的了，只是把内容整合在一起了。self.all_encoder_layers是经过transformer_model函数返回每个block的结果，self.sequence_output得到最后一个维度的结果，由上面的分析知维度为[Batch_szie, seq_length, hidden_size]，这和一开始词向量的维度是一样的，只不过这个结果是经过Transformer Encoded提取特征之后的，包含重要的信息，也是Bert想得到的结果：
+
+![](D:\local_repositories\Bert-model-code-interpretation\image\23.png)
+
+在这一步之后，该类用成员变量self.pooled_output保存第一个位置再经过一个MLP层的输出结果。熟悉数据输入形式的可以知道，这个位置是[CLS]，该位置的输出在Bert预训练中是用来判断句子上下文关系的：
+
+![](D:\local_repositories\Bert-model-code-interpretation\image\24.png)
+
+这里保存该结果除了可以用于Bert预训练，还可以微调Bert用于分类任务，详细可参考:
+
+[https://www.jianshu.com/p/22e462f01d8c](https://www.jianshu.com/p/22e462f01d8c)
+
+
+
+### 后续
 
 文中可能存在不少笔误或者理解不正确的表达不清晰地方敬请谅解，非常欢迎能提出来共同学习。
