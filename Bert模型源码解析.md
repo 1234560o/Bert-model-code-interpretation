@@ -6,7 +6,7 @@
 
 与大多数文章不同的是，本文主要是对Bert模型部分的源码进行详细解读，搞清楚数据从Bert模型输入到输出的每一步变化，这对于我们理解Bert模型、特别是改造Bert是具有极大帮助的。**需要注意的是，阅读本文之前，请先对Transformer、Bert有个大致的了解，本文直接讲述源码中的数据运算细节，并不会涉及一些基础内容**。当然，我们还是先来回顾下Bert模型结构：
 
-![](https://github.com/1234560o/Bert-model-code-interpretation/blob/master/image/1.png?raw=true)
+![](https://github.com/1234560o/Bert-model-code-interpretation/blob/master/image/01.png?raw=true)
 
 Bert模型采用的是transformer的encoder部分（见上图），不同的是输入部分Bert增加了segment_embedding且模型细节方面有些微区别。下面直接进入Bert源码解析。Bert模型部分源码地址：
 
@@ -18,15 +18,15 @@ Bert模型采用的是transformer的encoder部分（见上图），不同的是�
 
 Bert的输入有三部分：token_embedding、segment_embedding、position_embedding，它们分别指得是词的向量表示、词位于哪句话中、词的位置信息：
 
-![Bert输入](C:\Users\zwj\Desktop\Bert文章书写\image\1111.png)
+![Bert输入](https://github.com/1234560o/Bert-model-code-interpretation/blob/master/image/02.png?raw=true)
 
 Bert输入部分由下面两个函数得到：
 
-![](C:\Users\zwj\Desktop\Bert文章书写\image\2222.png)
+![](https://github.com/1234560o/Bert-model-code-interpretation/blob/master/image/03.png?raw=true)
 
 embedding_lookup得到token_embedding，embedding_postprocessor得到将这三个输入向量相加的结果，注意embedding_postprocessor函数return最后结果之前有一个layer normalize和droupout处理：
 
-![](C:\Users\zwj\Desktop\Bert文章书写\image\6.png)
+![](https://github.com/1234560o/Bert-model-code-interpretation/blob/master/image/04.png?raw=true)
 
 
 
@@ -34,9 +34,9 @@ embedding_lookup得到token_embedding，embedding_postprocessor得到将这三�
 
 由于使用Multi-Head Attention连接会导致在预测某一个词时会看到该词的信息，故Bert中作了Mask处理：
 
-![](C:\Users\zwj\Desktop\Bert文章书写\image\4.png)
+![](https://github.com/1234560o/Bert-model-code-interpretation/blob/master/image/05.png?raw=true)
 
-![](C:\Users\zwj\Desktop\Bert文章书写\image\5.png)
+![](https://github.com/1234560o/Bert-model-code-interpretation/blob/master/image/06.png?raw=true)
 
 
 
@@ -44,7 +44,7 @@ embedding_lookup得到token_embedding，embedding_postprocessor得到将这三�
 
 为了方便分析数据流通，对张量的维度作如下简记：
 
-![](C:\Users\zwj\Desktop\Bert文章书写\image\7.png)
+![](https://github.com/1234560o/Bert-model-code-interpretation/blob/master/image/07.png?raw=true)
 
 做了该简记后，经过词向量层输入Bert的张量维度为[B, F, embedding_size]，attention_mask维度为[B, F, T]。由于在Bert中是self-attention，F和T是相等的。接下来我详细解读一下attention_layer函数，该函数是Bert的Multi-Head Attention，也是模型最为复杂的部分。更详细的代码可以结合源码看。在进入这部分之前，也建议先了解一下2017年谷歌提出的transformer模型，推荐Jay Alammar可视化地介绍Transformer的博客文章The Illustrated Transformer ，非常容易理解整个机制。而Bert采用的是transformer的encoding部分，attention只用到了self-attention，self-attention可以看成Q=K的特殊情况。所以attention_layer函数参数中才会有from_tensor，to_tensor这两个变量，一个代表Q，另一个代表K及V（这里的Q，K，V含义不作介绍，可参考transformer模型讲解相关文章）。
 
