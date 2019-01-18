@@ -6,7 +6,7 @@
 
 与大多数文章不同的是，本文主要是对Bert模型部分的源码进行详细解读，搞清楚数据从Bert模型输入到输出的每一步变化，这对于我们理解Bert模型、特别是改造Bert是具有极大帮助的。**需要注意的是，阅读本文之前，请对Transformer、Bert有个大致的了解，本文直接讲述源码中的数据运算细节，并不会涉及一些基础内容**。当然，我们还是先来回顾下Bert模型结构：
 
-![](C:\Users\zwj\Desktop\Bert文章书写\image\1.png)
+![](https://github.com/1234560o/Bert-model-code-interpretation/blob/master/image/1.png)
 
 Bert模型采用的是transformer的encoder部分（见上图），不同的是输入部分Bert增加了segment_embedding且模型细节方面有些微区别。下面直接进入Bert源码解析。Bert模型部分源码地址：
 
