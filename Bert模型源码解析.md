@@ -64,9 +64,10 @@ MLP层将[B * F, embedding_size]变成[B * F, N * H]。但从后面的代码（t
 
 ![](https://github.com/1234560o/Bert-model-code-interpretation/blob/master/image/11.png?raw=true)
 
-之后，代码通过先前介绍的transpose_for_scores函数得到Q、K、V，维度分别为[B, N, F, H]、[B, N, T, H]、[B, N, T, H]。不解得是，后面的求V代码并不是通过transpose_for_scores函数得到，而是又把transpose_for_scores函数体再写了一遍（![](https://github.com/1234560o/Bert-model-code-interpretation/blob/master/image/hehe.png?raw=true))。
+之后，代码通过先前介绍的transpose_for_scores函数得到Q、K、V，维度分别为[B, N, F, H]、[B, N, T, H]、[B, N, T, H]。不解得是，后面的求V代码并不是通过transpose_for_scores函数得到，而是又把transpose_for_scores函数体再写了一遍（![](https://github.com/1234560o/Bert-model-code-interpretation/blob/master/image/haha.png?raw=true))。
 
 到目前为止Q、K、V我们都已经得到了，我们再来回顾一下论文“Attention is all you need”中的attention公式：
+
 $$
 Attention(Q, K, V) = softmax(\frac{QK^T}{\sqrt{d_k}})V
 $$
