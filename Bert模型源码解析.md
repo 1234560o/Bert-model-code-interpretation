@@ -1,14 +1,14 @@
 ## Bert模型tensorflow源码解析（详解transformer encoder数据运算）
 
-关于Bert模型的基本内容这里就不讲述了，可参考其它文章，这里是一个收集了很多讲解bert文章的网址：
+关于Bert模型的基本内容这里就不讲述了，可参考其它文章，这里有一个收集了很多讲解bert文章的网址：
 
 [http://www.52nlp.cn/bert-paper-%E8%AE%BA%E6%96%87-%E6%96%87%E7%AB%A0-%E4%BB%A3%E7%A0%81%E8%B5%84%E6%BA%90%E6%B1%87%E6%80%BB](http://www.52nlp.cn/bert-paper-%E8%AE%BA%E6%96%87-%E6%96%87%E7%AB%A0-%E4%BB%A3%E7%A0%81%E8%B5%84%E6%BA%90%E6%B1%87%E6%80%BB)
 
-与大多数文章不同的是，本文主要是对Bert模型部分的源码进行详细解读，搞清楚数据从Bert模型输入到输出的每一步变化，这对于我们理解Bert模型、特别是改造Bert是具有极大帮助的。**需要注意的是，阅读本文之前，请对Transformer、Bert有个大致的了解，本文直接讲述源码中的数据运算细节，并不会涉及一些基础内容**。我们还是先来回顾下Bert模型结构：
+与大多数文章不同的是，本文主要是对Bert模型部分的源码进行详细解读，搞清楚数据从Bert模型输入到输出的每一步变化，这对于我们理解Bert模型、特别是改造Bert是具有极大帮助的。**需要注意的是，阅读本文之前，请对Transformer、Bert有个大致的了解，本文直接讲述源码中的数据运算细节，并不会涉及一些基础内容**。当然，我们还是先来回顾下Bert模型结构：
 
-![](C:\Users\zwj\Desktop\Bert文章书写\image\QQ图片20190114103318.png)
+![](C:\Users\zwj\Desktop\Bert文章书写\image\1.png)
 
-Bert模型采用的是transformer的encoder部分，不同的是输入部分Bert增加了segment_embedding。下面直接进入源码解析部分。Bert模型部分源码地址：
+Bert模型采用的是transformer的encoder部分（见上图），不同的是输入部分Bert增加了segment_embedding且模型细节方面有些微区别。下面直接进入Bert源码解析。Bert模型部分源码地址：
 
 [https://github.com/google-research/bert/blob/master/modeling.py](https://github.com/google-research/bert/blob/master/modeling.py)。
 
