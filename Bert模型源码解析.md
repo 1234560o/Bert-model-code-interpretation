@@ -68,9 +68,7 @@ MLP层将[B * F, embedding_size]变成[B * F, N * H]。但从后面的代码（t
 
 到目前为止Q、K、V我们都已经得到了，我们再来回顾一下论文“Attention is all you need”中的attention公式：
 
-$$  
-Attention(Q, K, V) = softmax(\frac{QK^T}{\sqrt{d_k}})V  
-$$
+$$Attention(Q, K, V) = softmax(\frac{QK^T}{\sqrt{d_k}})V$$  
 
 ![](https://github.com/1234560o/Bert-model-code-interpretation/blob/master/image/12.png?raw=true)
 
@@ -78,7 +76,7 @@ $$
 
 ![](https://github.com/1234560o/Bert-model-code-interpretation/blob/master/image/13.png?raw=true)
 
-我们在前面步骤中得到的attention_mask的维度为[B, F, T]，为了能实现矩阵加法，所以先在维度1上（指第二个维度，第一个维度axis=0）扩充一维，得到维度为[B, 1, F, T]。然后利用python里面的`广播机制`就可以相加了，要mask的部分加上-10000.0，不mask的部分加上0。这个模型的mask是在softmax之前做的，至于具体原因我也不太清楚，还是继续跟着数据流走吧。加上mask之后就是softmax，softmax之后又加了dropout：
+我们在前面步骤中得到的attention_mask的维度为[B, F, T]，为了能实现矩阵加法，所以先在维度1上（指第二个维度，第一个维度axis=0）扩充一维，得到维度为[B, 1, F, T]。然后利用python里面的**广播机制**就可以相加了，要mask的部分加上-10000.0，不mask的部分加上0。这个模型的mask是在softmax之前做的，至于具体原因我也不太清楚，还是继续跟着数据流走吧。加上mask之后就是softmax，softmax之后又加了dropout：
 
 ![](https://github.com/1234560o/Bert-model-code-interpretation/blob/master/image/14.png?raw=true)
 
