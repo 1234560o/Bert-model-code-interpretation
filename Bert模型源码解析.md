@@ -2,12 +2,16 @@
 
 ### Contents
 
+* [前言](#前言)
 * [模型输入](#模型输入)
 * [Mask](#Mask)
 * [attention_layer](#attention_layer)
 * [transformer_model](#transformer_model)
-* [Bert_model class](#Bert_model class)
+* [Bert_model-class](#Bert_model-class)
 * [后续](#后续)
+
+
+### 前言
 
 关于Bert模型的基本内容这里就不讲述了，可参考其它文章，这里有一个收集了很多讲解bert文章的网址：
 
