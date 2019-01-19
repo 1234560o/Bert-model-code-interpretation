@@ -81,11 +81,13 @@ MLP层将[B * F, embedding_size]变成[B * F, N * H]。但从后面的代码（t
 
 到目前为止Q、K、V我们都已经得到了，我们再来回顾一下论文“Attention is all you need”中的attention公式：
 
-$$Attention(Q, K, V) = softmax(\frac{QK^T}{\sqrt{d_k}})V$$  
+![](https://github.com/1234560o/Bert-model-code-interpretation/blob/master/image/equation_1.png?raw=true)
+
+下面这部分得到的attention_scores得到的是softmax里面的部分。这里简单解释下tf.matmul。这个函数实质上是对最后两维进行普通的矩阵乘法，前面的维度都当做batch，因此这要求相乘的两个张量前面的维度是一样的，后面两个维度满足普通矩阵的乘法规则即可。细想一下attention的运算过程，这刚好是可以用这个矩阵乘法来得到结果的。得到的attention_scores的维度为[B, N, F, T]。只看后面两个维度（即只考虑一个数据、一个attention），attention_scores其实就是一个attention中Q和K作用得到的权重系数（还未经过softmax），而Q和K长度分别是F和T，因此共有F * T个这样的系数：
 
 ![](https://github.com/1234560o/Bert-model-code-interpretation/blob/master/image/12.png?raw=true)
 
-这部分得到的attention_scores得到的是softmax里面的部分。这里简单解释下tf.matmul。这个函数实质上是对最后两维进行普通的矩阵乘法，前面的维度都当做batch，因此这要求相乘的两个张量前面的维度是一样的，后面两个维度满足普通矩阵的乘法规则即可。细想一下attention的运算过程，这刚好是可以用这个矩阵乘法来得到结果的。得到的attention_scores的维度为[B, N, F, T]。只看后面两个维度（即只考虑一个数据、一个attention），attention_scores其实就是一个attention中Q和K作用得到的权重系数（还未经过softmax），而Q和K长度分别是F和T，因此共有F * T个这样的系数。那么比较关键的一步来了——Mask！
+那么比较关键的一步来了——Mask：
 
 ![](https://github.com/1234560o/Bert-model-code-interpretation/blob/master/image/13.png?raw=true)
 
