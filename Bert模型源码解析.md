@@ -1,5 +1,14 @@
 ## Bert模型tensorflow源码解析（详解Transformer Encoder数据运算）
 
+### Contents
+
+* [模型输入](#模型输入)
+* [Mask](#Mask)
+* [attention_layer](#attention_layer)
+* [transformer_model](#transformer_model)
+* [Bert_model class](#Bert_model class)
+* [后续](#后续)
+
 关于Bert模型的基本内容这里就不讲述了，可参考其它文章，这里有一个收集了很多讲解bert文章的网址：
 
 [http://www.52nlp.cn/bert-paper-%E8%AE%BA%E6%96%87-%E6%96%87%E7%AB%A0-%E4%BB%A3%E7%A0%81%E8%B5%84%E6%BA%90%E6%B1%87%E6%80%BB](http://www.52nlp.cn/bert-paper-%E8%AE%BA%E6%96%87-%E6%96%87%E7%AB%A0-%E4%BB%A3%E7%A0%81%E8%B5%84%E6%BA%90%E6%B1%87%E6%80%BB)
@@ -125,7 +134,7 @@ return的时候通过reshape_from_matrix函数把block的输出变成维度和in
 
 
 
-### Bert_model
+### Bert_model class
 
 为了方便训练，模型的整个过程都封装在Bert_model类中，通过该类的实例可以访问模型中的结果。详细的过程见代码。上述几个函数梳理之后便没什么复杂的了，只是把内容整合在一起了。self.all_encoder_layers是经过transformer_model函数返回每个block的结果，self.sequence_output得到最后一个维度的结果，由上面的分析知维度为[Batch_szie, seq_length, hidden_size]，这和一开始词向量的维度是一样的，只不过这个结果是经过Transformer Encoded提取特征之后的，包含重要的信息，也是Bert想得到的结果：
 
