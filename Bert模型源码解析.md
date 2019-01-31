@@ -4,7 +4,7 @@
 
 * [前言](#前言)
 * [模型输入](#模型输入)
-* [Mask](#Mask)
+* [Padding_Mask](#Padding_Mask)
 * [attention_layer](#attention_layer)
 * [transformer_model](#transformer_model)
 * [Bert_model class](#Bert_model-class)
@@ -43,9 +43,9 @@ embedding_lookup得到token_embedding，embedding_postprocessor得到将这三�
 
 
 
-### Mask
+### Padding_Mask
 
-由于使用Multi-Head Attention连接会导致在预测某一个词时会看到该词的信息，故Bert中作了Mask处理：
+由于输入句子长度不一样，Bert作了填充处理，将填充的部分标记为0，其余标记为1，这样是为了在做attention时能将填充部分得到的attention权重很少，从而能尽可能忽略padding部分对模型的影响：
 
 ![](https://github.com/1234560o/Bert-model-code-interpretation/blob/master/image/05.png?raw=true)
 
@@ -87,7 +87,7 @@ MLP层将[B * F, embedding_size]变成[B * F, N * H]。但从后面的代码（t
 
 ![](https://github.com/1234560o/Bert-model-code-interpretation/blob/master/image/12.png?raw=true)
 
-那么比较关键的一步来了——Mask：
+那么比较关键的一步来了——Mask，即将padding部分“mask”掉（**这和Bert预测词向量任务时的mask是完全不同的，详情参考相关文章，这里只讨论模型的详细架构**）：
 
 ![](https://github.com/1234560o/Bert-model-code-interpretation/blob/master/image/13.png?raw=true)
 
